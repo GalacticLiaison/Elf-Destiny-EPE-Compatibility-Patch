@@ -853,11 +853,18 @@ RasterizerState rasterizer_backfaces
 {
 	FrontCCW = yes
 }
+// RasterizerState ShadowRasterizerState
+// {
+// 	#Don't go higher than 10000 as it will make the shadows fall through the mesh
+// 	DepthBias = 1000
+// 	SlopeScaleDepthBias = 10
+// }
+// VVV EPE VVV 
 RasterizerState ShadowRasterizerState
 {
 	#Don't go higher than 10000 as it will make the shadows fall through the mesh
-	DepthBias = 1000
-	SlopeScaleDepthBias = 10
+	DepthBias = 500 #OLD VALUE 1.13 - 1000
+	SlopeScaleDepthBias = 2 #OLD VALUE 1.13 - 10
 }
 RasterizerState ShadowRasterizerStateBackfaces
 {
