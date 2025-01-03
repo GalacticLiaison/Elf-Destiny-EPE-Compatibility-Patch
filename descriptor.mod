@@ -6,4 +6,4 @@ tags={
 	"Fixes"
 }
 name="Elf Destiny + EPE Compatibility Patch"
-supported_version="1.14.2.2"
+supported_version="1.14.*"
