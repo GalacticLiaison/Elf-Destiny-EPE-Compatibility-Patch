@@ -254,7 +254,6 @@ PixelShader =
 				DebugReturn( Out, MaterialProps, LightingProps, EnvironmentMap );
 			#endif
 		}
-
 		// CfV (godherja)
 		//float3 CommonPixelShader( float4 Diffuse, float4 Properties, float3 NormalSample, in VS_OUTPUT_PDXMESHPORTRAIT Input )
 		float3 CommonPixelShader( float4 Diffuse, float4 Properties, float3 NormalSample, in VS_OUTPUT_PDXMESHPORTRAIT Input, in GH_SPortraitEffect PortraitEffect )
@@ -313,7 +312,7 @@ PixelShader =
 				DiffuseTranslucency = CalculatePortraitTranslucentLights( Input.WorldSpacePos, LightingProps._ShadowTerm, MaterialProps, TranslucencyProps, DiffuseIBL );
 				Color += DiffuseTranslucency;
 			#endif
-			
+
 			// CfV - EK2 Use for emissive in properties RED channel.
 			#ifdef EMISSIVE_PROPERTIES_RED
 				float EmissiveStrength = 1.0f;
@@ -402,7 +401,7 @@ PixelShader =
 				Properties = PdxTex2D( PropertiesMap, UV0 );
 				NormalSample = UnpackRRxGNormal( PdxTex2D( NormalMap, UV0 ) );
 			#endif
-				
+
 				// CfV (godherja)
 				GH_SPortraitEffect PortraitEffect = GH_ScanMarkerDecals(DecalCount, false, true);
 				// CfV end
@@ -463,7 +462,6 @@ PixelShader =
 				// CfV (POD)
 				POD_RemapColorsForPostEffect( Out, PortraitEffect );
 				// CfV end
-	
 				return Out;
 			}
 		]]
@@ -482,12 +480,11 @@ PixelShader =
 				float2 UV0 = Input.UV0;
 				float4 Diffuse = PdxTex2D( DiffuseMap, UV0 );
 				float4 Properties = PdxTex2D( PropertiesMap, UV0 );
-				
+				float4 NormalSampleRaw = PdxTex2D( NormalMap, UV0 );
 				#ifdef DOUBLE_SIDED_ENABLED
-					float4 NormalSampleRaw = PdxTex2D( NormalMap, UV0 );
 					float3 NormalSample = UnpackRRxGNormal( NormalSampleRaw ) * ( PDX_IsFrontFace ? 1 : -1 );
 				#else
-					float3 NormalSample = UnpackRRxGNormal( PdxTex2D( NormalMap, UV0 ) );
+					float3 NormalSample = UnpackRRxGNormal( NormalSampleRaw );
 				#endif
 
 				#if defined( VARIATIONS_ENABLED ) || defined ( COA_ENABLED )
@@ -497,13 +494,19 @@ PixelShader =
 				// CfV (godherja)
 				GH_SPortraitEffect PortraitEffect = GH_ScanMarkerDecals(DecalCount, true, false);
 				// CfV end
-
 				#ifdef VARIATIONS_ENABLED
-					// CfV (POD)
-					ApplyVariationPatterns( Input, Diffuse, Properties, NormalSample, PortraitEffect );
-					// CfV end
+					float4 SecondColorMask = vec4( 0.0f );
+					SecondColorMask.r = Properties.r;
+					SecondColorMask.g =  NormalSampleRaw.b;
+					// ApplyVariationPatterns( Input, Diffuse, Properties, NormalSample, SecondColorMask );
+
+					// // CfV (POD)
+					ApplyVariationPatterns( Input, Diffuse, Properties, NormalSample, SecondColorMask, PortraitEffect );
+					// // CfV end
 				#endif
+				
 				#ifdef COA_ENABLED
+					Properties.r = 1.0;
 					ApplyCoa( Input, Diffuse, CoaColor1, CoaColor2, CoaColor3, CoaOffsetAndScale.xy, CoaOffsetAndScale.zw, CoaTexture, Properties.r );
 				#endif
 
@@ -519,7 +522,6 @@ PixelShader =
 				// CfV (POD)
 				POD_RemapColorsForPostEffect( Out, PortraitEffect );
 				// CfV end
-
 				return Out;
 			}
 		]]
@@ -561,7 +563,6 @@ PixelShader =
 
 				float3 Color = CommonPixelShader( Diffuse, Properties, NormalSample, Input, PortraitEffect );
 				// CfV end
-
 				#ifdef ALPHA_TO_COVERAGE
 					Diffuse.a = RescaleAlphaByMipLevel( Diffuse.a, UV0, DiffuseMap );
 
@@ -585,9 +586,10 @@ PixelShader =
 				Out.SSAOColor = PdxTex2D( SSAOColorMap, UV0 );
 				Out.SSAOColor.rgb *= vPaletteColorHair.rgb;
 
-				// CfV (POD)
+								// CfV (POD)
 				POD_RemapColorsForPostEffect( Out, PortraitEffect );
 				// CfV end
+
 
 				return Out;
 			}
@@ -620,16 +622,13 @@ PixelShader =
 
 				float3 Color = CommonPixelShader( Diffuse, Properties, NormalSample, Input, PortraitEffect );
 				// CfV end
-
 				Out.Color = float4( Color, Diffuse.a );
 				
 				Out.SSAOColor = PdxTex2D( SSAOColorMap, UV0 );
 				Out.SSAOColor.rgb *= vPaletteColorHair.rgb;
-
 				// CfV (POD)
 				POD_RemapColorsForPostEffect( Out, PortraitEffect );
 				// CfV end
-
 				return Out;
 			}
 		]]
@@ -841,6 +840,12 @@ BlendState alpha_to_coverage
 	AlphaToCoverage = yes
 }
 
+BlendState no_blend_alpha_to_coverage
+{
+	BlendEnable = no
+	AlphaToCoverage = yes
+}
+
 RasterizerState rasterizer_no_culling
 {
 	CullMode = "none"
@@ -863,8 +868,8 @@ RasterizerState rasterizer_backfaces
 RasterizerState ShadowRasterizerState
 {
 	#Don't go higher than 10000 as it will make the shadows fall through the mesh
-	DepthBias = 500 #OLD VALUE 1.13 - 1000
-	SlopeScaleDepthBias = 2 #OLD VALUE 1.13 - 10
+	DepthBias = 500 #Vanilla Value is 1000, Pre 1.13 value was 500
+	SlopeScaleDepthBias = 2 #Vanilla value is 10, old pre 1.13 value was 2
 }
 RasterizerState ShadowRasterizerStateBackfaces
 {
@@ -965,6 +970,22 @@ Effect portrait_attachment_pattern_alpha_to_coverage
 }
 
 Effect portrait_attachment_pattern_alpha_to_coverageShadow
+{
+	VertexShader = "VertexPdxMeshStandardShadow"
+	PixelShader = "PixelPdxMeshStandardShadow"
+	RasterizerState = "ShadowRasterizerState"
+	Defines = { "PDX_MESH_BLENDSHAPES" }
+}
+
+Effect portrait_attachment_pattern_no_blend_alpha_to_coverage
+{
+	VertexShader = "VS_standard"
+	PixelShader = "PS_attachment"
+	BlendState = "no_blend_alpha_to_coverage"
+	Defines = { "VARIATIONS_ENABLED" "PDX_MESH_BLENDSHAPES" }
+}
+
+Effect portrait_attachment_pattern_no_blend_alpha_to_coverageShadow
 {
 	VertexShader = "VertexPdxMeshStandardShadow"
 	PixelShader = "PixelPdxMeshStandardShadow"
