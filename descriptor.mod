@@ -1,4 +1,4 @@
-version="1.0"
+version="1.18"
 tags={
 	"Utilities"
 	"Portraits"
@@ -6,5 +6,5 @@ tags={
 	"Fixes"
 }
 name="Elf Destiny + EPE Compatibility Patch"
-supported_version="1.16.*"
+supported_version="1.18.*"
 remote_file_id="3399817421"
