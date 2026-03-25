@@ -237,6 +237,9 @@ pdxmesh = {
 		blend_shape = { id = "female_nbs_forehead_brow_height_max"								type = "blendshapes/female_nbs_forehead_brow_height_max.mesh" data = "normal|tangent" }
 		blend_shape = { id = "female_nbs_head_profile_min"										type = "blendshapes/female_bs_head_profile_min.mesh" data = "normal|tangent" }
 
+		#### ELF DESTINY ATTRIBUTES
+		blend_shape = { id = "female_bs_elf_ears"												type = "blendshapes/female_bs_elf_ears.mesh" }
+
 		blend_shape = { id = "female_bs_enclosed_helm"												type = "blendshapes/female_bs_enclosed_helm.mesh" }
 
 		#### Generic animations
@@ -609,6 +612,8 @@ entity = {
 	attribute = { name = "teeth_bs_lower_down"													blend_shape = "female_bs_neutral" }
 	attribute = { name = "teeth_bs_cheek_fat_neg"												blend_shape = "female_bs_neutral" }
 	
+	#### SPARK ATTRIBUTES
+	attribute = { name = "bs_elf_ears"															blend_shape = "female_bs_elf_ears" }
 
 	#### Blend shapes for enclosed helmets
 	attribute = { name = "bs_enclosed_helmet"												blend_shape = "female_bs_enclosed_helm" }

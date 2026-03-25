@@ -1242,6 +1242,10 @@ entity = {
 	attribute = { name = "teeth_bs_lower_down"												blend_shape = "male_bs_neutral" }
 	attribute = { name = "teeth_bs_cheek_fat_neg"											blend_shape = "male_bs_neutral" }
 
+	#### ELF DESTINY CHANGES
+	attribute = { name = "bs_elf_ears"														blend_shape = "male_bs_elf_ears" }
+	#### Animations
+
 	#### Blend shapes for enclosed helmets
 	attribute = { name = "bs_enclosed_helmet"												blend_shape = "male_bs_enclosed_helm" }
 
