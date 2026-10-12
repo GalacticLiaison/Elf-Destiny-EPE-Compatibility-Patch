@@ -1,0 +1,90 @@
+﻿human = {
+	default_age = 25
+	min_age_for_sexuality = 10
+
+	modifier_overrides = {
+		clothes = ruler_designer_clothes
+		clothes = ruler_designer_clothes_nude		
+		weight = ruler_designer_overweight
+		weight = ruler_designer_underweight
+		muscularity = muscular
+	}
+
+	accessories = {
+		hairstyles = custom_hair
+		beards = custom_beards
+		elf_ethnicity_accessory = custom_elf_ethnicity
+		elf_eye_tattoo_accessories = custom_eye_tattoos
+		elf_forehead_tattoo_accessories = custom_forehead_tattoos
+		elf_neck_tattoo_accessories = custom_neck_tattoos
+		# Dark Elf Beta - cheek slots. A customization group is only reachable
+		# once its accessory gene is bound to it HERE; without the binding the
+		# group loads silently and is never drawn, with nothing in error.log.
+		elf_left_cheek_tattoo_accessories = custom_left_cheek_tattoos
+		elf_right_cheek_tattoo_accessories = custom_right_cheek_tattoos
+		# Dark Elf Beta - ink colour section (hosts the ink colour picker; Tattoo Colour tab)
+		elf_ink_colour_accessories = custom_tattoo_ink_colour
+		elf_back_tattoo_accessories = custom_back_tattoos
+		elf_center_chest_tattoo_accessories = custom_center_chest_tattoos
+		elf_lower_chest_tattoo_accessories = custom_lower_chest_tattoos
+		elf_left_chest_tattoo_accessories = custom_left_chest_tattoos
+		elf_right_chest_tattoo_accessories = custom_right_chest_tattoos
+		elf_left_arm_tattoo_accessories = custom_left_arm_tattoos
+		elf_right_arm_tattoo_accessories = custom_right_arm_tattoos
+		elf_left_hand_tattoo_accessories = custom_left_hand_tattoos
+		elf_right_hand_tattoo_accessories = custom_right_hand_tattoos
+		# Dark Elf Beta - both legs are one slot: a decal spans the
+		# whole texture, so a single mask inks the left and right
+		# islands together.
+		elf_legs_tattoo_accessories = custom_legs_tattoos
+		# Elf Destiny - neck jewelry (Lloth's spider choker) -- HIDDEN for release
+		# ed_neck_jewelry = custom_neck_jewelry
+	}
+
+	sex_only_genes = {
+		female = { gene_bs_bust }
+	}
+
+	hidden_slider_genes = {
+		# gene_bs_body_type
+	}
+
+	gene_groups = {
+		anatomy = {
+			body = full_body
+			head_neck = face
+			ears = face
+			face = face
+			eyes = face
+			nose = face
+			mouth = face
+		}
+		hair = {
+			hair = face
+			beard = face
+		}
+		race = {
+			elf = full_body
+			# custom_eye_tattoos = face
+			# Maybe we can doa back view, pass custom camera to
+			# texture = "[RulerDesignerWindow.GetPortrait( 'environment_body', 'camera_ruler_designer', PdxGetWidgetScreenSize( PdxGuiWidget.Self ) )]"
+			# body = custom_elf_skin_tones
+		}
+		tattoo = {
+			tattoo_face = face
+			tattoo_body = full_body
+			# Dark Elf Beta - the tattoo ink colour picker's own tab
+			tattoo_colour = full_body
+			# Elf Destiny - neck jewelry tab -- HIDDEN for release
+			# jewelry = face
+		}
+	}
+
+	color_genes = {
+		hair = custom_hair
+	}
+	accessory_color_override_block_0 = custom_clothes
+	accessory_color_override_block_1 = custom_headgear
+	accessory_color_override_block_2 = custom_cloaks
+	accessory_color_override_block_3 = custom_legwear
+}
